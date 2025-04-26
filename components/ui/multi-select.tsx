@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X, Check, ChevronsUpDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
+import { Command, CommandGroup, CommandItem, CommandInput, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 
 type Option = {
@@ -67,21 +67,6 @@ export function MultiSelect({
     [onChange, selected]
   );
 
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Backspace' && !inputValue && selected.length > 0) {
-        // Remove the last selected item when pressing backspace in an empty input
-        handleRemove(selected[selected.length - 1]);
-      }
-
-      // Close the dropdown on escape
-      if (e.key === 'Escape') {
-        setOpen(false);
-      }
-    },
-    [inputValue, selected, handleRemove]
-  );
-
   // Filter options based on input value
   const filteredOptions = React.useMemo(() => {
     return options.filter(option => 
@@ -118,13 +103,23 @@ export function MultiSelect({
             </Badge>
           ))}
 
-          <CommandPrimitive.Input
+          <input
+            type="text"
             placeholder={selectedOptions.length === 0 ? placeholder : ""}
             value={inputValue}
-            onValueChange={setInputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === 'Backspace' && !inputValue && selected.length > 0) {
+                // Remove the last selected item when pressing backspace in an empty input
+                handleRemove(selected[selected.length - 1]);
+              }
+              // Close the dropdown on escape
+              if (e.key === 'Escape') {
+                setOpen(false);
+              }
+            }}
             disabled={disabled}
             className="ml-1 flex-1 outline-none placeholder:text-muted-foreground bg-transparent"
           />
