@@ -1,0 +1,11 @@
+/* Добавляем стили для анимации при наведении на кнопки */
+.button-hover-effect {
+  transform: scale(1.03) !important;
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Общие стили для страниц аутентификации */
+.login-button {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}

@@ -1,0 +1,198 @@
+/* Специальные стили для страниц аутентификации */
+
+/* Эффект размытия для фона */
+.auth-bg {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(99, 102, 241, 0.05) 25%,
+    rgba(139, 92, 246, 0.05) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  animation: rotate-bg 20s linear infinite;
+}
+
+@keyframes rotate-bg {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Эффект блестящего бордера */
+.shiny-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.shiny-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shine 3s infinite;
+  z-index: 10;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Анимированные элементы фона */
+.animated-bg-element {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.4;
+  mix-blend-mode: screen;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(59, 130, 246, 0.2);
+  top: 10%;
+  left: 10%;
+  animation: float1 20s ease-in-out infinite;
+}
+
+.blob-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(99, 102, 241, 0.2);
+  top: 60%;
+  right: 5%;
+  animation: float2 15s ease-in-out infinite;
+}
+
+.blob-3 {
+  width: 350px;
+  height: 350px;
+  background: rgba(139, 92, 246, 0.2);
+  bottom: 5%;
+  left: 30%;
+  animation: float3 18s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5%, -5%) rotate(5deg); }
+  50% { transform: translate(0, -10%) rotate(0deg); }
+  75% { transform: translate(-5%, -5%) rotate(-5deg); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-5%, 5%) rotate(-5deg); }
+  50% { transform: translate(-10%, 0) rotate(0deg); }
+  75% { transform: translate(-5%, -5%) rotate(5deg); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(7%, 7%) rotate(7deg); }
+  66% { transform: translate(-7%, 7%) rotate(-7deg); }
+}
+
+/* Эффект для инпутов */
+.input-glow {
+  transition: all 0.3s ease;
+}
+
+.input-glow:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1), 
+              0 0 15px 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Анимированная иконка */
+.icon-pulse {
+  animation: icon-pulse 3s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* 3D эффекты */
+.rotate-on-hover {
+  transition: transform 0.3s ease;
+}
+
+.rotate-on-hover:hover {
+  transform: perspective(1000px) rotateY(5deg) rotateX(-5deg);
+}
+
+/* Эффект размытия для заднего плана карточки */
+.card-blur-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(20px);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+/* Градиентный бордер для карточки */
+.card-gradient-border {
+  position: relative;
+  z-index: 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-gradient-border::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.5),
+    rgba(99, 102, 241, 0.5),
+    rgba(139, 92, 246, 0.5)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Эффект шиммера для градиентов */
+.gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    #3b82f6 0%,
+    #6366f1 25%,
+    #8b5cf6 50%,
+    #6366f1 75%,
+    #3b82f6 100%
+  );
+  background-size: 200% 100%;
+  animation: gradient-shimmer 4s linear infinite;
+}
+
+@keyframes gradient-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}

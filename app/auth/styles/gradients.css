@@ -1,0 +1,206 @@
+/* Стили для React-логотипа */
+.react-logo-glow {
+  filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.7)) drop-shadow(0 0 20px rgba(0, 188, 212, 0.5));
+  animation: logo-pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes logo-pulse {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.7)) drop-shadow(0 0 20px rgba(0, 188, 212, 0.5));
+    transform: scale(1);
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(49, 27, 146, 0.9)) drop-shadow(0 0 30px rgba(49, 27, 146, 0.6));
+    transform: scale(1.05);
+  }
+}
+
+/* Стили для бруталистского градиента */
+.brutal-gradient {
+  background: linear-gradient(90deg, #121212 0%, #311B92 50%, #00BCD4 100%);
+  background-size: 200% 100%;
+  animation: brutal-shift 10s ease infinite;
+}
+
+@keyframes brutal-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}/* Улучшенные градиенты для страниц аутентификации */
+
+/* Супер-крутой градиент для кнопки */
+.plasma-gradient {
+  background: linear-gradient(-45deg, #4c6ef5, #7c3aed, #a855f7, #c026d3);
+  background-size: 400% 400%;
+  animation: plasma-shift 12s ease infinite;
+}
+
+@keyframes plasma-shift {
+  0% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: 250% 250%;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+}
+
+/* Эффект неонового свечения */
+.neon-glow {
+  box-shadow: 
+    0 0 10px rgba(0, 188, 212, 0.5),
+    0 0 20px rgba(0, 188, 212, 0.3), 
+    0 0 40px rgba(0, 188, 212, 0.2),
+    inset 0 0 10px rgba(0, 188, 212, 0.1);
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse {
+  from {
+    box-shadow: 
+      0 0 5px rgba(99, 102, 241, 0.5),
+      0 0 20px rgba(99, 102, 241, 0.3);
+  }
+  to {
+    box-shadow: 
+      0 0 10px rgba(99, 102, 241, 0.7),
+      0 0 30px rgba(99, 102, 241, 0.5),
+      0 0 50px rgba(99, 102, 241, 0.3);
+  }
+}
+
+/* Анимация ореола вокруг объектов */
+.aura-effect {
+  position: relative;
+}
+
+.aura-effect::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(99, 102, 241, 0.3) 0%,
+    rgba(99, 102, 241, 0.1) 60%,
+    transparent 70%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  animation: aura-pulse 4s ease-in-out infinite;
+}
+
+@keyframes aura-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+/* Эффект пространственной волны для фонов */
+.space-wave-bg {
+  background: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(10, 15, 40, 0.8),
+      rgba(10, 10, 10, 0.9) 80%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(0, 188, 212, 0.2) 0%,
+      rgba(49, 27, 146, 0.3) 50%,
+      rgba(18, 18, 18, 0.5) 100%
+    );
+  animation: space-wave 20s infinite alternate;
+}
+
+@keyframes space-wave {
+  0% {
+    background-position: 0% 0%, 0% 0%;
+    background-size: 100% 100%, 100% 100%;
+  }
+  50% {
+    background-position: 50% 50%, 50% 50%;
+    background-size: 120% 120%, 110% 110%;
+  }
+  100% {
+    background-position: 0% 0%, 0% 0%;
+    background-size: 100% 100%, 100% 100%;
+  }
+}
+
+/* Шиммер-эффект для текста */
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    rgba(18, 18, 18, 0.1) 0%,
+    rgba(0, 188, 212, 0.3) 25%,
+    rgba(49, 27, 146, 0.5) 50%,
+    rgba(0, 188, 212, 0.3) 75%,
+    rgba(18, 18, 18, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: text-shimmer 6s linear infinite;
+}
+
+@keyframes text-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Эффект расширения при наведении */
+.expand-on-hover {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.expand-on-hover:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Кибернетический эффект границы */
+.cyber-border {
+  position: relative;
+  isolation: isolate;
+  --border-width: 2px;
+  --border-angle: 0deg;
+  background-image: conic-gradient(
+    from var(--border-angle),
+    rgba(76, 110, 245, 0.6) 0deg,
+    rgba(124, 58, 237, 0.6) 90deg,
+    rgba(165, 85, 247, 0.6) 180deg,
+    rgba(124, 58, 237, 0.6) 270deg,
+    rgba(76, 110, 245, 0.6) 360deg
+  );
+  background-size: calc(100% - (var(--border-width) * 2)) calc(100% - (var(--border-width) * 2));
+  background-repeat: no-repeat;
+  background-position: center center;
+  animation: rotate-border 20s linear infinite;
+}
+
+.cyber-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: inherit;
+  background-size: 100% 100%;
+  filter: blur(5px);
+  opacity: 0.3;
+}
+
+@keyframes rotate-border {
+  0% { --border-angle: 0deg; }
+  100% { --border-angle: 360deg; }
+}
