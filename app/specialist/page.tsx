@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { 
-  PlusCircle, 
-  Briefcase, 
-  Clock, 
+import {
+  PlusCircle,
+  Briefcase,
+  Clock,
   AlertTriangle,
   ArrowUp,
   ArrowDown,
@@ -45,20 +45,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function DashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   // Имитируем загрузку
   const loading = false;
 
   // Простой компонент для статистической карточки
-  const StatCard = ({ 
-    title, 
-    value, 
-    description, 
-    icon: Icon, 
-    trend, 
+  const StatCard = ({
+    title,
+    value,
+    description,
+    icon: Icon,
+    trend,
     trendValue,
     linkHref
-  }: { 
+  }: {
     title: string;
     value: string | number;
     description?: string;
@@ -97,7 +97,7 @@ export default function DashboardPage() {
         </CardContent>
         {linkHref && (
           <CardFooter className="p-2">
-            <Link 
+            <Link
               href={linkHref}
               className="w-full flex items-center justify-center text-xs text-muted-foreground hover:text-primary"
             >
@@ -131,32 +131,32 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-6">
-        <StatCard 
-          title="Всего поставщиков" 
-          value="42" 
+        <StatCard
+          title="Всего поставщиков"
+          value="42"
           icon={AlertTriangle}
           description="Все зарегистрированные поставщики"
           linkHref="/specialist/suppliers"
         />
-        <StatCard 
-          title="Активные контракты" 
-          value="18" 
+        <StatCard
+          title="Активные контракты"
+          value="18"
           icon={Briefcase}
           description="Действующие контракты на текущий момент"
           linkHref="/specialist/contracts"
         />
-        <StatCard 
-          title="Истекают контракты" 
-          value="5" 
+        <StatCard
+          title="Истекают контракты"
+          value="5"
           icon={Clock}
           description="Контракты, истекающие в ближайшие 30 дней"
           linkHref="/specialist/contracts"
           trend="up"
           trendValue="+2 новых за месяц"
         />
-        <StatCard 
-          title="Ожидают действий" 
-          value="3" 
+        <StatCard
+          title="Ожидают действий"
+          value="3"
           icon={AlertTriangle}
           description="Поставщики и контракты, ожидающие обработки"
           linkHref="/specialist/suppliers"
@@ -169,7 +169,7 @@ export default function DashboardPage() {
           <TabsTrigger value="contracts">Истекающие контракты</TabsTrigger>
           <TabsTrigger value="suppliers">Новые поставщики</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="overview" className="space-y-4">
           <Card>
             <CardHeader>
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                     </div>
                     <div>
                       <p className="font-medium">Новый поставщик добавлен</p>
-                      <p className="text-sm text-muted-foreground">ООО "Технопарк" ожидает проверки</p>
+                      <p className="text-sm text-muted-foreground">ООО Технопарк ожидает проверки</p>
                       <p className="text-xs text-muted-foreground mt-1">
                         2 часа назад
                       </p>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
             </CardFooter>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="contracts" className="space-y-4">
           <Card>
             <CardHeader>
@@ -240,12 +240,12 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow 
+                  <TableRow
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => router.push('/specialist/contracts/1')}
                   >
                     <TableCell className="font-medium">Поставка оборудования</TableCell>
-                    <TableCell>ООО "ТехСнаб"</TableCell>
+                    <TableCell>ООО ТехСнаб</TableCell>
                     <TableCell>
                       <Badge className="bg-green-500">Активен</Badge>
                     </TableCell>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                       </Badge>
                     </TableCell>
                   </TableRow>
-                  <TableRow 
+                  <TableRow
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => router.push('/specialist/contracts/2')}
                   >
@@ -286,7 +286,7 @@ export default function DashboardPage() {
             </CardFooter>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="suppliers" className="space-y-4">
           <Card>
             <CardHeader>
@@ -305,11 +305,11 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow 
+                  <TableRow
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => router.push('/specialist/suppliers/1')}
                   >
-                    <TableCell className="font-medium">ООО "Технопарк"</TableCell>
+                    <TableCell className="font-medium">ООО Технопарк</TableCell>
                     <TableCell>
                       Россия
                       <span className="block text-xs text-muted-foreground">Москва</span>
@@ -325,7 +325,7 @@ export default function DashboardPage() {
                       20.04.2025
                     </TableCell>
                   </TableRow>
-                  <TableRow 
+                  <TableRow
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => router.push('/specialist/suppliers/2')}
                   >

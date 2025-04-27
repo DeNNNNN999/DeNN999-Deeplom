@@ -1,4 +1,4 @@
-/* === globals.css (Расширенная "Имба" Версия) === */
+/* === globals.css (Супер-продвинутая версия с анимациями и эффектами) === */
 
 /* --- Базовые импорты Tailwind --- */
 @tailwind base;
@@ -10,7 +10,7 @@
 
   /* --- CSS Переменные --- */
   :root {
-    /* Основные цвета shadcn/ui (можно подстроить) */
+    /* Основные цвета shadcn/ui */
     --background: 0 0% 100%; /* Белый */
     --foreground: 224 71.4% 4.1%; /* Тёмно-синий */
     --muted: 210 20% 96.1%;
@@ -32,7 +32,7 @@
     --ring: 221 83% 53%; /* Цвет фокуса */
     --radius: 0.5rem; /* Радиус скругления */
 
-    /* Цвета для графиков (можно добавить больше) */
+    /* Цвета для графиков */
     --chart-1: 221 83% 53%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -41,36 +41,59 @@
     --chart-6: 110 50% 50%;
     --chart-7: 200 70% 55%;
 
-    /* --- Кастомные Переменные для "Имбы" --- */
-
-    /* Продвинутые градиенты */
+    /* --- Продвинутые Градиенты --- */
     --gradient-brand: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--chart-4)) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--muted)) 100%);
     --gradient-magic-1: linear-gradient(to right top, #6366f1, #a855f7, #d946ef, #f472b6, #fb923c);
     --gradient-magic-2: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    --gradient-cyberpunk: linear-gradient(90deg, #ff0080, #7928ca, #1e90ff);
+    --gradient-neon: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+    --gradient-ocean: linear-gradient(to right, #2193b0, #6dd5ed);
+    --gradient-sunset: linear-gradient(to right, #f83600, #fe8c00);
+    --gradient-retro: linear-gradient(to bottom right, #ff9966, #ff5e62);
+    --gradient-warm: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    --gradient-cosmic: linear-gradient(to right, #0f0c29, #302b63, #24243e);
     --gradient-subtle-bg: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%);
     --gradient-glass: linear-gradient(135deg, hsla(var(--background) / 0.5) 0%, hsla(var(--background) / 0.2) 100%);
     --gradient-text: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--chart-4))); /* Для текста */
 
-    /* Параметры анимаций */
+    /* --- Анимации и переходы --- */
+    --anim-speed-fastest: 0.15s;
     --anim-speed-fast: 0.25s;
     --anim-speed-normal: 0.5s;
     --anim-speed-slow: 0.9s;
+    --anim-speed-slowest: 1.5s;
+    
     --anim-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --anim-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
     --anim-ease-elastic: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --anim-ease-bounce: cubic-bezier(0.87, 0, 0.13, 1);
+    --anim-ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --anim-ease-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
 
-    /* Тени */
+    /* --- Тени --- */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-glow: 0 0 15px rgba(79, 70, 229, 0.45);
+    --shadow-neon: 0 0 10px rgba(28, 134, 235, 0.5), 0 0 20px rgba(28, 134, 235, 0.3), 0 0 30px rgba(28, 134, 235, 0.1);
+    --shadow-cosmic: 0 0 50px rgba(123, 97, 255, 0.3);
 
-    /* Размеры (дополнительно к Tailwind) */
+    /* --- Размеры и прочие параметры --- */
     --size-icon-sm: 1rem;
     --size-icon-md: 1.25rem;
     --size-icon-lg: 1.5rem;
+    --size-icon-xl: 2rem;
+    
+    --text-glow: 0 0 10px rgba(79, 70, 229, 0.4);
+    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    
+    --blur-sm: 4px;
+    --blur-md: 12px;
+    --blur-lg: 24px;
+    --blur-xl: 40px;
   }
 
   /* --- Темная тема --- */
@@ -105,11 +128,18 @@
     --chart-6: 110 70% 50%;
     --chart-7: 200 80% 60%;
 
-    /* --- Кастомные Переменные для "Имбы" (Темная тема) --- */
+    /* --- Градиенты для темной темы --- */
     --gradient-brand: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--chart-4)) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--muted) / 0.5) 100%);
     --gradient-magic-1: linear-gradient(to right top, #4f46e5, #9333ea, #c026d3, #e11d48, #f97316);
     --gradient-magic-2: linear-gradient(43deg, #4118A0 0%, #A830A0 46%, #EFB040 100%);
+    --gradient-cyberpunk: linear-gradient(90deg, #ff00aa, #9b00ff, #3d6dff);
+    --gradient-neon: linear-gradient(to right, #00f5d4, #8a2be2, #ff0080);
+    --gradient-ocean: linear-gradient(to right, #1a6477, #1e90ff);
+    --gradient-sunset: linear-gradient(to right, #d42f2f, #f69e38);
+    --gradient-retro: linear-gradient(to bottom right, #fc4a1a, #f7b733);
+    --gradient-warm: linear-gradient(120deg, #e6b980 0%, #eaafc8 100%);
+    --gradient-cosmic: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     --gradient-subtle-bg: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.1) 100%);
     --gradient-glass: linear-gradient(135deg, hsla(var(--background) / 0.6) 0%, hsla(var(--background) / 0.3) 100%);
     --gradient-text: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--chart-5)));
@@ -120,6 +150,9 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.2);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.25);
     --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+    --shadow-glow: 0 0 15px rgba(123, 97, 255, 0.6);
+    --shadow-neon: 0 0 10px rgba(123, 97, 255, 0.6), 0 0 20px rgba(123, 97, 255, 0.4), 0 0 30px rgba(123, 97, 255, 0.2);
+    --shadow-cosmic: 0 0 50px rgba(79, 70, 229, 0.4);
   }
 
   /* --- Базовые стили HTML/Body --- */
@@ -146,6 +179,36 @@
     font-feature-settings: 'rlig' 1, 'calt' 1; /* Стандартные лигатуры */
   }
 
+  /* Стилизация выделения текста */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.8);
+    color: hsl(var(--primary-foreground));
+    text-shadow: none;
+  }
+
+  /* Стилизация скроллбаров */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background) / 0.15);
+    border-radius: 100vh;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, hsl(var(--primary) / 0.7), hsl(var(--chart-4) / 0.7));
+    border-radius: 100vh;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, hsl(var(--primary) / 0.9), hsl(var(--chart-4) / 0.9));
+    border-width: 1px;
+  }
+
   /* Базовые стили для заголовков */
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
@@ -164,60 +227,380 @@
     @apply underline text-[hsl(var(--primary)/0.8)];
   }
 
-  /* Стили выделения текста */
-  ::selection {
-    background-color: hsl(var(--primary) / 0.8);
-    color: hsl(var(--primary-foreground));
-  }
-
   /* Улучшенные стили фокуса */
   *:focus-visible {
-      @apply outline-none ring-2 ring-offset-2 rounded-sm;
-      ring-color: hsl(var(--ring));
-      ring-offset-color: hsl(var(--background));
+    @apply outline-none ring-2 ring-offset-2 rounded-sm;
+    ring-color: hsl(var(--ring));
+    ring-offset-color: hsl(var(--background));
   }
 
 } /* Конец @layer base */
 
-/* --- Стилизация Скроллбара (Webkit) --- */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-::-webkit-scrollbar-track {
-  background: hsl(var(--background) / 0.1);
-  border-radius: 10px;
-  margin: 2px;
-}
-::-webkit-scrollbar-track:hover {
-  background: hsl(var(--background) / 0.2);
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.5);
-  border-radius: 10px;
-  border: 3px solid transparent;
-  background-clip: padding-box;
-  transition: background var(--anim-speed-fast) ease-out;
-}
-::-webkit-scrollbar-thumb:hover {
-   background: hsl(var(--primary) / 0.8);
-   border-width: 2px;
-}
-::-webkit-scrollbar-corner {
-    background: transparent;
-}
+/* --- Слой компонентов --- */
+@layer components {
+  /* --- Кнопки --- */
+  
+  /* Базовая кнопка */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+  
+  /* Градиентная кнопка */
+  .btn-gradient {
+    @apply btn text-primary-foreground relative overflow-hidden z-0;
+    background-image: var(--gradient-brand);
+    background-size: 200% auto;
+    box-shadow: var(--shadow-md);
+    transition: all 0.5s var(--anim-ease-out);
+  }
+  .btn-gradient:hover {
+    background-position: right center;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  .btn-gradient:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  /* Неоновая кнопка */
+  .btn-neon {
+    @apply btn relative z-0 overflow-hidden border border-indigo-500 bg-transparent text-indigo-500;
+    box-shadow: var(--shadow-neon);
+    transition: all 0.3s ease;
+  }
+  .btn-neon:hover {
+    @apply text-white;
+    background-color: hsl(var(--primary));
+    box-shadow: var(--shadow-neon), 0 0 20px hsl(var(--primary));
+    transform: translateY(-2px);
+  }
+  .btn-neon:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-neon), 0 0 10px hsl(var(--primary));
+  }
 
-/* --- Слой Утилит --- */
+  /* Кнопка с 3D эффектом */
+  .btn-3d {
+    @apply btn bg-indigo-600 text-white relative;
+    transform: translateY(0);
+    box-shadow: 0 4px 0 0 #4338ca;
+    transition: all 0.2s;
+  }
+  .btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 0 #4338ca;
+  }
+  .btn-3d:active {
+    transform: translateY(3px);
+    box-shadow: 0 0px 0 0 #4338ca;
+  }
+
+  /* Кнопка с градиентной бордером */
+  .btn-border-gradient {
+    position: relative;
+    background: transparent;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .btn-border-gradient::before {
+    content: '';
+    position: absolute;
+    top: -2px; right: -2px; bottom: -2px; left: -2px;
+    background: var(--gradient-neon);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradient-shift 10s ease infinite;
+  }
+  .btn-border-gradient:hover::before {
+    animation: gradient-shift 5s ease infinite;
+  }
+  .btn-border-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: hsl(var(--background));
+    z-index: -1;
+  }
+  .btn-border-gradient:hover::after {
+    background: hsl(var(--background) / 0.9);
+  }
+
+  /* --- Карточки --- */
+  
+  /* Базовая карточка */
+  .card-base {
+    @apply bg-card text-card-foreground rounded-lg border border-border shadow-md transition-all duration-300 ease-in-out;
+  }
+  .card-base-hover {
+    @apply hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  /* Стеклянная карточка */
+  .card-glass {
+    @apply rounded-xl shadow-lg overflow-hidden;
+    background: hsla(var(--background) / 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsla(var(--border) / 0.3);
+    transition: transform 0.3s var(--anim-ease-out), box-shadow 0.3s var(--anim-ease-out);
+  }
+  .card-glass:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl), var(--shadow-glow);
+  }
+  
+  /* Неоновая карточка */
+  .card-neon {
+    @apply rounded-xl shadow-lg overflow-hidden border border-indigo-500/30;
+    background: hsla(var(--background) / 0.9);
+    box-shadow: var(--shadow-neon);
+    transition: all 0.4s var(--anim-ease-out);
+  }
+  .card-neon:hover {
+    box-shadow: var(--shadow-neon), 0 0 30px rgba(79, 70, 229, 0.4);
+    border-color: hsla(var(--primary) / 0.6);
+  }
+  
+  /* Карточка с 3D эффектом */
+  .card-3d {
+    @apply rounded-xl shadow-lg relative overflow-hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  .card-3d-inner {
+    @apply w-full h-full relative bg-background rounded-xl border border-border;
+    transform: translateZ(0);
+    transition: transform 0.5s var(--anim-ease-expo);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+  }
+  .card-3d:hover .card-3d-inner {
+    transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+  }
+  
+  /* Карточка с градиентной рамкой */
+  .card-gradient-border {
+    position: relative;
+    border-radius: var(--radius);
+    background: hsl(var(--background));
+    z-index: 0;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .card-gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-magic-1);
+    background-size: 400% 400%;
+    z-index: -2;
+    animation: gradient-shift 10s ease infinite;
+  }
+  .card-gradient-border::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: hsl(var(--background));
+    border-radius: calc(var(--radius) - 1px);
+    z-index: -1;
+  }
+
+  /* --- Текстовые эффекты --- */
+  
+  /* Градиентный текст */
+  .text-gradient {
+    background-image: var(--gradient-brand);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    transition: background-position 0.6s;
+  }
+  .text-gradient:hover {
+    background-position: right center;
+  }
+  
+  /* Неоновый текст */
+  .text-neon {
+    color: hsl(var(--primary));
+    text-shadow: 0 0 10px hsla(var(--primary) / 0.8),
+                 0 0 20px hsla(var(--primary) / 0.5);
+    transition: text-shadow 0.3s;
+  }
+  .text-neon:hover {
+    text-shadow: 0 0 15px hsla(var(--primary) / 0.9),
+                 0 0 30px hsla(var(--primary) / 0.6),
+                 0 0 45px hsla(var(--primary) / 0.3);
+  }
+  
+  /* Текст с прозрачностью и тенью */
+  .text-ghosted {
+    color: hsla(var(--foreground) / 0.8);
+    text-shadow: var(--text-shadow);
+    transition: all 0.3s;
+  }
+  .text-ghosted:hover {
+    color: hsla(var(--foreground) / 1);
+    text-shadow: var(--text-shadow), 0 0 10px hsla(var(--primary) / 0.5);
+    letter-spacing: 0.05em;
+  }
+
+  /* --- Анимированные фоны --- */
+  .bg-animated-gradient {
+    background: var(--gradient-magic-1);
+    background-size: 300% 300%;
+    animation: gradient-shift 15s ease infinite;
+  }
+  
+  .bg-animated-cosmic {
+    background: var(--gradient-cosmic);
+    background-size: 300% 300%;
+    animation: gradient-shift 20s ease infinite;
+  }
+  
+  .bg-animated-cyberpunk {
+    background: var(--gradient-cyberpunk);
+    background-size: 400% 400%;
+    animation: gradient-shift 10s ease infinite;
+  }
+
+  /* --- Загрузчики --- */
+  
+  /* Пульсирующий круг */
+  .loader-pulse {
+    @apply relative w-20 h-20 rounded-full;
+    background: hsla(var(--primary) / 0.2);
+  }
+  .loader-pulse::before,
+  .loader-pulse::after {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background: hsla(var(--primary) / 0.4);
+    animation: pulse-out 2s ease-out infinite;
+  }
+  .loader-pulse::after {
+    animation-delay: 1s;
+  }
+  
+  /* Спиннер с градиентом */
+  .loader-spinner {
+    @apply w-16 h-16 rounded-full relative;
+    background: conic-gradient(
+      transparent 0%,
+      hsla(var(--primary) / 0.1) 30%,
+      hsla(var(--primary)) 70%,
+      transparent 100%
+    );
+    animation: spin 1.5s linear infinite;
+  }
+  .loader-spinner::before {
+    content: '';
+    @apply absolute inset-[3px] bg-background rounded-full;
+  }
+  
+  /* Волновой загрузчик */
+  .loader-wave {
+    @apply flex items-end gap-1;
+  }
+  .loader-wave-bar {
+    @apply w-2 bg-primary rounded-t;
+    height: 10px;
+    animation: wave-loader 1.2s cubic-bezier(0.35, 0.35, 0.54, 0.96) infinite;
+  }
+  .loader-wave-bar:nth-child(2) { animation-delay: 0.1s; }
+  .loader-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+  .loader-wave-bar:nth-child(4) { animation-delay: 0.3s; }
+  .loader-wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+} /* Конец @layer components */
+
+/* --- Слой утилит --- */
 @layer utilities {
-  /* --- Perspective utilities --- */
+  /* --- 3D Perspective utilities --- */
   .perspective-500 { perspective: 500px; }
   .perspective-800 { perspective: 800px; }
   .perspective-1000 { perspective: 1000px; }
   .perspective-1500 { perspective: 1500px; }
+  .perspective-2000 { perspective: 2000px; }
   .preserve-3d { transform-style: preserve-3d; }
-  
+  .backface-hidden { backface-visibility: hidden; }
 
-  /* --- Анимации Keyframes --- */
+  /* --- Text Effects --- */
+  .text-shadow-sm { text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  .text-shadow-md { text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+  .text-shadow-lg { text-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  .text-shadow-none { text-shadow: none; }
+  
+  .text-glow-sm { text-shadow: 0 0 4px hsla(var(--primary) / 0.4); }
+  .text-glow-md { text-shadow: 0 0 8px hsla(var(--primary) / 0.5); }
+  .text-glow-lg { text-shadow: 0 0 12px hsla(var(--primary) / 0.6), 0 0 20px hsla(var(--primary) / 0.3); }
+  
+  /* --- Фильтры --- */
+  .blur-background { backdrop-filter: blur(var(--blur-md)); }
+  .blur-background-sm { backdrop-filter: blur(var(--blur-sm)); }
+  .blur-background-lg { backdrop-filter: blur(var(--blur-lg)); }
+  .blur-background-xl { backdrop-filter: blur(var(--blur-xl)); }
+  
+  .saturate-more { filter: saturate(1.2); }
+  .saturate-less { filter: saturate(0.8); }
+  .saturate-none { filter: saturate(0); }
+  
+  .brightness-more { filter: brightness(1.2); }
+  .brightness-less { filter: brightness(0.8); }
+  
+  /* --- Тени --- */
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-neon { box-shadow: var(--shadow-neon); }
+  .shadow-cosmic { box-shadow: var(--shadow-cosmic); }
+  .shadow-inner-top { box-shadow: inset 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+  .shadow-inner-bottom { box-shadow: inset 0 -1px 3px 0 rgb(0 0 0 / 0.1); }
+  
+  /* --- Градиентные фоны --- */
+  .bg-gradient-brand { background-image: var(--gradient-brand); }
+  .bg-gradient-magic { background-image: var(--gradient-magic-1); }
+  .bg-gradient-cyberpunk { background-image: var(--gradient-cyberpunk); }
+  .bg-gradient-neon { background-image: var(--gradient-neon); }
+  .bg-gradient-ocean { background-image: var(--gradient-ocean); }
+  .bg-gradient-sunset { background-image: var(--gradient-sunset); }
+  .bg-gradient-retro { background-image: var(--gradient-retro); }
+  .bg-gradient-warm { background-image: var(--gradient-warm); }
+  .bg-gradient-cosmic { background-image: var(--gradient-cosmic); }
+  .bg-gradient-glass { background-image: var(--gradient-glass); }
+  
+  /* --- Градиентный текст --- */
+  .text-gradient-brand {
+    background-image: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-magic {
+    background-image: var(--gradient-magic-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-cyberpunk {
+    background-image: var(--gradient-cyberpunk);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-neon {
+    background-image: var(--gradient-neon);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  /* --- Анимации --- */
+  
+  /* Keyframes */
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
   @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -236,25 +619,40 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-  
   @keyframes floating {
     0% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-15px) rotate(2deg); }
     100% { transform: translateY(0px) rotate(0deg); }
   }
-  
   @keyframes glow-pulse {
     0% { opacity: 0.2; filter: blur(15px); }
     50% { opacity: 0.4; filter: blur(20px); }
     100% { opacity: 0.2; filter: blur(15px); }
   }
-  
   @keyframes text-shimmer {
     0% { background-position: -500% 0; }
     100% { background-position: 500% 0; }
   }
-
-  /* --- Утилиты Анимаций --- */
+  @keyframes pulse-out {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+  @keyframes wave-loader {
+    0%, 100% { height: 5px; }
+    50% { height: 30px; }
+  }
+  @keyframes rotation-3d {
+    0% { transform: rotateX(0) rotateY(0); }
+    50% { transform: rotateX(15deg) rotateY(15deg); }
+    100% { transform: rotateX(0) rotateY(0); }
+  }
+  @keyframes morph-shape {
+    0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  
+  /* Классы анимаций */
   .animate-floating { animation: floating 6s ease-in-out infinite; }
   .animate-floating-slow { animation: floating 10s ease-in-out infinite; }
   .animate-glow-pulse { animation: glow-pulse 4s ease-in-out infinite; }
@@ -268,210 +666,229 @@
   .animate-zoom-in { animation: zoom-in var(--anim-speed-fast) var(--anim-ease-out) forwards; }
   .animate-zoom-out { animation: zoom-out var(--anim-speed-fast) var(--anim-ease-out) forwards; }
   .animate-spin-slow { animation: spin 3s linear infinite; }
+  .animate-spin-medium { animation: spin 1.5s linear infinite; }
   .animate-ping-custom { animation: ping-custom 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
   .animate-bounce-custom { animation: bounce-custom 1s infinite; }
   .animate-pulse-bg { animation: pulse-bg 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-  /* Утилита Шиммера (для загрузки) */
+  .animate-rotation-3d { animation: rotation-3d 8s ease infinite; }
+  .animate-morph-shape { animation: morph-shape 8s ease-in-out infinite; }
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+  .animate-delay-700 { animation-delay: 700ms; }
+  .animate-delay-1000 { animation-delay: 1000ms; }
+  
+  /* --- Эффекты при наведении --- */
+  .hover-lift { transition: transform 0.3s var(--anim-ease-out); }
+  .hover-lift:hover { transform: translateY(-5px); }
+  
+  .hover-scale { transition: transform 0.3s var(--anim-ease-out); }
+  .hover-scale:hover { transform: scale(1.05); }
+  
+  .hover-glow { transition: box-shadow 0.3s ease; }
+  .hover-glow:hover { box-shadow: var(--shadow-glow); }
+  
+  .hover-neon { transition: all 0.3s ease; }
+  .hover-neon:hover { box-shadow: var(--shadow-neon); }
+  
+  .hover-rotate { transition: transform 0.3s var(--anim-ease-out); }
+  .hover-rotate:hover { transform: rotate(5deg); }
+  
+  .hover-shadow-grow { transition: box-shadow 0.3s ease; }
+  .hover-shadow-grow:hover { box-shadow: var(--shadow-xl); }
+  
+  /* --- Утилита для создания шиммера --- */
   .shimmer-bg {
-      position: relative;
-      overflow: hidden;
-      background-color: hsl(var(--muted) / 0.7);
-      border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+    background-color: hsl(var(--muted) / 0.7);
+    border-radius: var(--radius);
   }
   .shimmer-bg::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      transform: translateX(-100%);
-      background-image: linear-gradient(
-          90deg,
-          hsla(var(--background) / 0) 0,
-          hsla(var(--background) / 0.1) 20%,
-          hsla(var(--background) / 0.3) 60%,
-          hsla(var(--background) / 0) 100%
-      );
-      animation: shimmer 2s infinite;
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      hsla(var(--background) / 0) 0,
+      hsla(var(--background) / 0.1) 20%,
+      hsla(var(--background) / 0.3) 60%,
+      hsla(var(--background) / 0) 100%
+    );
+    animation: shimmer 2s infinite;
   }
   .dark .shimmer-bg::after {
      background-image: linear-gradient(
-          90deg,
-          hsla(var(--foreground) / 0) 0,
-          hsla(var(--foreground) / 0.05) 20%,
-          hsla(var(--foreground) / 0.1) 60%,
-          hsla(var(--foreground) / 0) 100%
-      );
-  }
-
-  /* Утилита Эффекта Стекла */
-  .glass-effect {
-     background: hsl(var(--background) / 0.5);
-     backdrop-filter: blur(16px) saturate(180%);
-     -webkit-backdrop-filter: blur(16px) saturate(180%); /* Safari */
-     border: 1px solid hsl(var(--border) / 0.2);
-     box-shadow: var(--shadow-lg);
-  }
-  .dark .glass-effect {
-      background: hsl(var(--background) / 0.6);
-      border: 1px solid hsl(var(--border) / 0.1);
+      90deg,
+      hsla(var(--foreground) / 0) 0,
+      hsla(var(--foreground) / 0.05) 20%,
+      hsla(var(--foreground) / 0.1) 60%,
+      hsla(var(--foreground) / 0) 100%
+    );
   }
   
-  /* Утилита Неоморфизма */
-  .neumorphism-effect {
+  /* --- Утилиты для стекломорфизма --- */
+  .glass-effect {
+    @apply rounded-xl overflow-hidden;
+    background: hsl(var(--background) / 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .glass-card {
+    @apply glass-effect p-6;
+  }
+  
+  .glass-panel {
+    @apply glass-effect p-8;
+  }
+  
+  .glass-button {
+    @apply glass-effect px-4 py-2 flex items-center justify-center transition-all duration-300;
+  }
+  .glass-button:hover {
+    @apply bg-primary/10;
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* --- Неоморфизм --- */
+  .neumorphism-light {
+    background: #f0f4f8;
+    box-shadow: 
+      10px 10px 20px rgba(166, 180, 200, 0.7),
+      -10px -10px 20px rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .neumorphism-light {
     background: hsl(var(--background));
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2),
-                -8px -8px 16px rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
+    box-shadow: 
+      5px 5px 10px rgba(0, 0, 0, 0.5),
+      -5px -5px 10px rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
   
-  /* Утилита Брутализма */
-  .brutalism-effect {
-    background: hsl(var(--primary));
+  .neumorphism-inset {
+    background: #f0f4f8;
+    box-shadow: 
+      inset 5px 5px 10px rgba(166, 180, 200, 0.7),
+      inset -5px -5px 10px rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .neumorphism-inset {
+    background: hsl(var(--background));
+    box-shadow: 
+      inset 3px 3px 5px rgba(0, 0, 0, 0.5),
+      inset -3px -3px 5px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* --- Брутализм --- */
+  .brutalism-box {
+    background: hsl(var(--background));
     border: 3px solid hsl(var(--foreground));
     box-shadow: 6px 6px 0 hsl(var(--foreground));
     transform: translate(-3px, -3px);
     transition: transform 0.3s, box-shadow 0.3s;
   }
-  .brutalism-effect:hover {
+  
+  .brutalism-box:hover {
     transform: translate(0, 0);
-    box-shadow: 0px 0px 0 hsl(var(--foreground));
+    box-shadow: 0 0 0 hsl(var(--foreground));
   }
   
-  /* Утилита Кибер стиля */
-  .cyber-effect {
-     background: hsl(var(--background) / 0.5);
-     backdrop-filter: blur(16px) saturate(180%);
-     -webkit-backdrop-filter: blur(16px) saturate(180%); /* Safari */
-     border: 1px solid hsl(var(--border) / 0.2);
-     box-shadow: var(--shadow-lg);
+  /* --- Кибер стиль --- */
+  .cyber-box {
+    position: relative;
+    background: linear-gradient(to right, #000, #222);
+    border: 1px solid #00f3ff;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.5), inset 0 0 10px rgba(0, 243, 255, 0.2);
+    overflow: hidden;
   }
-  .dark .glass-effect {
-      background: hsl(var(--background) / 0.6);
-      border: 1px solid hsl(var(--border) / 0.1);
+  
+  .cyber-box::before,
+  .cyber-box::after {
+    content: '';
+    position: absolute;
+    background: #00f3ff;
   }
-
-  /* Утилита для градиентного текста */
-  .text-gradient-brand {
-      background-image: var(--gradient-brand);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+  
+  .cyber-box::before {
+    top: 0;
+    left: 20px;
+    width: 20px;
+    height: 5px;
   }
-  .text-gradient-magic {
-      background-image: var(--gradient-magic-1);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+  
+  .cyber-box::after {
+    bottom: 0;
+    right: 20px;
+    width: 20px;
+    height: 5px;
   }
-
-   /* Анимированный градиентный фон */
-  .bg-animated-gradient-magic {
-      background-image: var(--gradient-magic-2);
-      background-size: 300% 300%;
-      animation: gradient-shift 10s ease infinite;
-  }
-
-  /* Утилита для отладки */
+  
+  /* --- Отладочная утилита --- */
   .debug-outline {
-      outline: 1px dashed red;
+    outline: 1px dashed red;
   }
   .debug-outline * {
-      outline: 1px dashed rgba(0, 100, 255, 0.5);
+    outline: 1px dashed rgba(0, 100, 255, 0.5);
+  }
+  
+  /* --- Скрытие элементов --- */
+  .clip-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
 } /* Конец @layer utilities */
 
-/* --- Слой Компонентов (Базовые стили для общих паттернов) --- */
-@layer components {
-  /* Кнопка с градиентной рамкой */
-  .btn-gradient-border {
-    position: relative;
-    background: transparent;
-    z-index: 1;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .btn-gradient-border::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, #3b82f6, #6366f1, #8b5cf6);
-    z-index: -2;
-  }
-  .btn-gradient-border::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    background: hsl(var(--background) / 0.9);
-    border-radius: calc(var(--radius) - 2px);
-    z-index: -1;
-    transition: all 0.3s ease;
-  }
-  .btn-gradient-border:hover::after {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, #3b82f6, #6366f1, #8b5cf6);
-  }
-  .btn-gradient-border:hover {
-    color: white;
-  }
-  
+/* --- Custom Cursor --- */
+.custom-cursor-dot {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  z-index: 9999;
+  background-color: hsl(var(--primary));
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
 
-  /* Базовая карточка с эффектом */
-  .card-base {
-    @apply bg-card text-card-foreground rounded-lg border border-border shadow-md transition-all duration-300 ease-in-out;
-  }
-  .card-base-hover {
-    @apply hover:shadow-xl hover:-translate-y-1;
-  }
+.custom-cursor {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  z-index: 9998;
+  border: 1px solid hsla(var(--primary), 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  mix-blend-mode: difference;
+}
 
-  /* Базовая кнопка */
-  .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+@media (max-width: 768px) {
+  .custom-cursor, .custom-cursor-dot {
+    display: none;
   }
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
-  }
-  /* Пример градиентной кнопки из прошлого ответа */
-  .btn-primary-gradient {
-      @apply btn text-primary-foreground;
-      background-image: var(--gradient-brand);
-      background-size: 200% auto;
-      box-shadow: var(--shadow-md);
-  }
-  .btn-primary-gradient:hover {
-      background-position: right center;
-      box-shadow: var(--shadow-lg);
-      transform: scale(1.03);
-  }
-  .btn-secondary {
-      @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80;
-  }
-  .btn-ghost {
-      @apply btn hover:bg-accent hover:text-accent-foreground;
-  }
-  .btn-link {
-      @apply btn text-primary underline-offset-4 hover:underline;
-  }
-  .btn-destructive {
-      @apply btn bg-destructive text-destructive-foreground hover:bg-destructive/90;
-  }
-  .btn-icon {
-      @apply h-10 w-10; /* Размер по умолчанию для иконок */
-  }
-
-  /* Стили для инпутов */
-  .input-base {
-      @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200;
-  }
-
-} /* Конец @layer components */
+}
