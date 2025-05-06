@@ -6,7 +6,6 @@ import { SidebarNav } from './sidebar-nav'
 import { Header } from './header'
 import { getCurrentUser } from '@/lib/auth'
 import { gsap } from 'gsap'
-import { motion, AnimatePresence, useSpring } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
@@ -26,7 +25,7 @@ type CurrentUser = {
   role: 'ADMIN' | 'PROCUREMENT_MANAGER' | 'PROCUREMENT_SPECIALIST'
 } | null
 
-// Расширенные навигационные элементы для каждой роли с подкатегориями
+// Навигационные элементы для каждой роли
 const adminNavItems: NavItem[] = [
   { title: 'Dashboard', href: '/admin/dashboard', icon: 'mdi:view-dashboard-outline' },
   { title: 'Suppliers', href: '/admin/suppliers', icon: 'mdi:factory' },
@@ -54,52 +53,80 @@ const specialistNavItems: NavItem[] = [
   { title: 'Documents', href: '/specialist/documents', icon: 'mdi:file-outline' },
 ]
 
-// Компонент лоадера с анимацией в стиле Dracula
-const DashboardLoader = () => {
+// Улучшенный лоадер в стиле скриншота, но с лучшими анимациями
+const EnhancedLoader = () => {
+  const loaderRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Анимация прогресс-бара
+    if (progressRef.current) {
+      const bar = progressRef.current.querySelector('.progress-bar')
+      if (bar) {
+        gsap.fromTo(
+          bar,
+          { width: '5%' },
+          {
+            width: '100%',
+            duration: 2,
+            ease: 'power1.inOut',
+          },
+        )
+      }
+    }
+
+    // Простые статичные декоративные элементы в фоне
+    if (loaderRef.current) {
+      const createDecorative = (count: number) => {
+        for (let i = 0; i < count; i++) {
+          const element = document.createElement('div')
+          const size = 10 + Math.random() * 20
+          const isRounded = Math.random() > 0.5
+
+          element.style.position = 'absolute'
+          element.style.width = `${size}px`
+          element.style.height = `${size}px`
+          element.style.borderRadius = isRounded ? '50%' : '20%'
+          element.style.opacity = (0.1 + Math.random() * 0.3).toString()
+          element.style.backgroundColor = ['#bd93f9', '#ff79c6', '#8be9fd'][Math.floor(Math.random() * 3)]
+          element.style.left = `${Math.random() * 100}%`
+          element.style.top = `${Math.random() * 100}%`
+          element.style.filter = 'blur(2px)'
+
+          loaderRef.current?.appendChild(element)
+
+          // Очень легкое статичное движение для элементов фона
+          gsap.to(element, {
+            y: `${Math.random() * 30 - 15}`,
+            duration: 10 + Math.random() * 10,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+          })
+        }
+      }
+
+      createDecorative(15)
+    }
+  }, [])
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#282a36]">
-      <div className="relative flex flex-col items-center gap-6">
-        {/* Пульсирующий фоновый круг */}
-        <div className="absolute w-40 h-40 rounded-full bg-gradient-to-r from-[#bd93f9]/20 to-[#ff79c6]/20 blur-xl animate-pulse"></div>
-
-        {/* Анимированный логотип */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{
-            scale: [0.8, 1.2, 1],
-            opacity: 1,
-            rotateY: [0, 360],
-            transition: {
-              duration: 1.5,
-              ease: 'easeOut',
-              rotateY: { repeat: Infinity, duration: 3, ease: 'linear' },
-            },
-          }}
-          className="relative z-10">
-          <div className="h-16 w-16 flex items-center justify-center bg-gradient-to-br from-[#bd93f9] to-[#ff79c6] rounded-2xl shadow-xl shadow-[#bd93f9]/20">
-            <Icon icon="simple-icons:drizzle" className="h-10 w-10 text-white" />
-          </div>
-        </motion.div>
-
-        {/* Текст загрузки */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center z-10">
-          <h3 className="text-xl font-semibold mb-1 text-gradient-loader">Supplier Management</h3>
-          <p className="text-[#f8f8f2] text-sm opacity-80">Enterprise Dashboard Loading</p>
-        </motion.div>
-
-        {/* Индикатор загрузки */}
-        <div className="w-48 h-1.5 bg-[#44475a]/50 rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: '100%' }}
-            transition={{ duration: 2, ease: 'easeInOut' }}
-            className="h-full bg-gradient-to-r from-[#8be9fd] via-[#bd93f9] to-[#ff79c6] rounded-full"
-          />
+    <div
+      ref={loaderRef}
+      className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-[#282a36] overflow-hidden">
+      {/* Логотип с небольшой анимацией пульсации */}
+      <div className="relative mb-6">
+        <div className="h-16 w-16 flex items-center justify-center bg-[#bd93f9] rounded-xl shadow-[0_0_20px_rgba(189,147,249,0.5)]">
+          <Icon icon="simple-icons:drizzle" className="h-10 w-10 text-white" />
         </div>
+      </div>
+
+      {/* Текст загрузки */}
+      <h3 className="text-xl font-medium mb-8 text-white">Enterprise Dashboard Loading</h3>
+
+      {/* Индикатор загрузки */}
+      <div ref={progressRef} className="w-64 h-1.5 bg-[#44475a]/70 rounded-full overflow-hidden">
+        <div className="progress-bar h-full bg-gradient-to-r from-[#8be9fd] via-[#bd93f9] to-[#ff79c6] rounded-full"></div>
       </div>
     </div>
   )
@@ -116,10 +143,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
   const mainRef = useRef<HTMLDivElement>(null)
-  const decorativeOrbsRef = useRef<HTMLDivElement>(null)
-  const mousePosRef = useRef({ x: 0, y: 0 })
-  const springX = useSpring(0, { stiffness: 100, damping: 30 })
-  const springY = useSpring(0, { stiffness: 100, damping: 30 })
+  const decorRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   // Получаем пользователя и инициализируем приложение
   useEffect(() => {
@@ -130,128 +155,105 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         return
       }
 
-      // Настраиваем пользователя и завершаем загрузку
       setUser(currentUserData as CurrentUser)
 
-      // Небольшая искусственная задержка для красивой анимации загрузки
+      // Небольшая задержка для отображения загрузчика
       setTimeout(() => {
         setLoading(false)
-      }, 1000) // Уменьшил время загрузки с 2000 до 1000 мс
+      }, 2000)
     }
 
     initializeApp()
   }, [router])
 
-  // Устанавливаем флаг завершения анимации после скрытия загрузчика
+  // Переход от загрузки к интерфейсу
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => {
         setAnimationComplete(true)
-      }, 1000)
+      }, 300)
       return () => clearTimeout(timer)
     }
   }, [loading])
 
-  // Эффект для декоративных элементов
+  // Создание СТАТИЧНЫХ декоративных элементов (без следования за мышью)
   useEffect(() => {
-    if (!animationComplete || !decorativeOrbsRef.current) return
+    if (!animationComplete || !decorRef.current) return
 
-    // Создаем декоративные шары в случайных местах
-    const createDecorativeOrbs = () => {
-      const orbs = decorativeOrbsRef.current
-      if (!orbs) return
-
-      // Очищаем контейнер
-      while (orbs.firstChild) {
-        orbs.removeChild(orbs.firstChild)
-      }
-
-      // Создаем новые шары
-      for (let i = 0; i < 12; i++) {
-        const orb = document.createElement('div')
-        const size = 60 + Math.random() * 200
-        orb.classList.add('orb')
-        orb.style.width = `${size}px`
-        orb.style.height = `${size}px`
-        orb.style.borderRadius = '50%'
-        orb.style.position = 'absolute'
-        orb.style.opacity = (0.03 + Math.random() * 0.05).toString()
-        orb.style.background = `radial-gradient(circle, rgba(189,147,249,0.6) 0%, rgba(255,121,198,0.3) 100%)`
-        orb.style.filter = `blur(${15 + Math.random() * 25}px)`
-        orb.style.left = `${Math.random() * 100}%`
-        orb.style.top = `${Math.random() * 100}%`
-        orb.style.transform = 'translate(-50%, -50%)'
-        orb.style.pointerEvents = 'none'
-
-        orbs.appendChild(orb)
-      }
+    // Очищаем предыдущие элементы
+    while (decorRef.current.firstChild) {
+      decorRef.current.removeChild(decorRef.current.firstChild)
     }
 
-    createDecorativeOrbs()
+    // Создаем фиксированные декоративные элементы
+    const createFixedDecorations = () => {
+      const numberOfElements = window.innerWidth < 768 ? 6 : 10
 
-    // Анимируем декоративные шары с GSAP
-    const animateOrbs = () => {
-      const orbs = document.querySelectorAll('.orb')
+      for (let i = 0; i < numberOfElements; i++) {
+        const orb = document.createElement('div')
+        const size = 100 + Math.random() * 150
 
-      orbs.forEach((orb, index) => {
+        orb.classList.add('decor-orb')
+        orb.style.width = `${size}px`
+        orb.style.height = `${size}px`
+        orb.style.position = 'absolute'
+        orb.style.borderRadius = '50%'
+        orb.style.opacity = (0.02 + Math.random() * 0.06).toString()
+        orb.style.background =
+          'radial-gradient(circle, rgba(189,147,249,0.6) 0%, rgba(255,121,198,0.2) 70%, transparent 100%)'
+        orb.style.filter = `blur(${20 + Math.random() * 30}px)`
+        orb.style.left = `${Math.random() * 100}%`
+        orb.style.top = `${Math.random() * 100}%`
+        orb.style.pointerEvents = 'none'
+
+        decorRef.current?.appendChild(orb)
+
+        // Очень медленная и минимальная анимация, НЕ зависящая от мыши
         gsap.to(orb, {
-          x: `random(-150, 150, 5)`,
-          y: `random(-150, 150, 5)`,
-          opacity: `random(0.01, 0.1, 0.01)`,
-          duration: 15 + Math.random() * 30,
+          x: `${Math.random() * 40 - 20}`,
+          y: `${Math.random() * 40 - 20}`,
+          opacity: `+=${Math.random() * 0.03}`,
+          duration: 15 + Math.random() * 20,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
-          delay: index * 0.2,
-        })
-      })
-    }
-
-    animateOrbs()
-
-    // Эффект движения шаров в зависимости от позиции курсора
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePosRef.current = { x: e.clientX, y: e.clientY }
-
-      if (mainRef.current) {
-        const rect = mainRef.current.getBoundingClientRect()
-        const x = (e.clientX - rect.left) / rect.width - 0.5
-        const y = (e.clientY - rect.top) / rect.height - 0.5
-
-        springX.set(x * 40)
-        springY.set(y * 40)
-
-        const orbs = document.querySelectorAll('.orb')
-        orbs.forEach((orb, i) => {
-          const depth = 1 + (i % 3) * 0.5
-          gsap.to(orb, {
-            x: `+=${x * 30 * depth}`,
-            y: `+=${y * 30 * depth}`,
-            duration: 2,
-            ease: 'power2.out',
-          })
+          delay: i * 0.5,
         })
       }
     }
 
-    if (mainRef.current) {
-      mainRef.current.addEventListener('mousemove', handleMouseMove)
-    }
+    createFixedDecorations()
 
     return () => {
-      if (mainRef.current) {
-        mainRef.current.removeEventListener('mousemove', handleMouseMove)
-      }
-      gsap.killTweensOf('.orb')
+      gsap.killTweensOf('.decor-orb')
     }
-  }, [animationComplete, springX, springY])
+  }, [animationComplete])
 
-  // Отображаем лоадер, пока идет проверка/загрузка пользователя
+  // Анимация перехода между страницами
+  useEffect(() => {
+    if (!animationComplete || !contentRef.current) return
+
+    gsap.fromTo(
+      contentRef.current,
+      {
+        opacity: 0,
+        y: 15,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+      },
+    )
+  }, [pathname, animationComplete])
+
+  // Отображаем лоадер, пока идет загрузка
   if (loading) {
-    return <DashboardLoader />
+    return <EnhancedLoader />
   }
 
-  // Если пользователь так и не загрузился
+  // Если пользователь не загрузился
   if (!user) {
     return null
   }
@@ -261,94 +263,73 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     user.role === 'ADMIN' ? adminNavItems : user.role === 'PROCUREMENT_MANAGER' ? managerNavItems : specialistNavItems
 
   return (
-    <div
-      ref={mainRef}
-      className={cn(
-        'flex h-screen overflow-hidden',
-        'bg-[#282a36] bg-opacity-95', // Основной цвет в стиле Dracula
-        'relative', // Для позиционирования декоративных элементов
-      )}>
-      {/* Декоративный фоновый слой */}
+    <div className="flex h-screen overflow-hidden bg-[#282a36] relative">
+      {/* Статичный декоративный фоновый слой */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         {/* Фиксированный градиентный фон */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(40,42,54,1)_0%,rgba(68,71,90,0.7)_100%)]"></div>
 
-        {/* Верхний декоративный градиент */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[20vh]
-          bg-gradient-to-b from-[#6272a4]/10 to-transparent"></div>
-
-        {/* Нижний декоративный градиент */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[20vh]
-          bg-gradient-to-t from-[#44475a]/10 to-transparent"></div>
-
-        {/* Анимированные декоративные шары */}
-        <div ref={decorativeOrbsRef} className="absolute inset-0 overflow-hidden"></div>
+        {/* Статичные декоративные элементы */}
+        <div ref={decorRef} className="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
         {/* Сетчатый фон / Оверлей */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ0NzVhIiBzdHJva2Utd2lkdGg9IjAuNSIgb3BhY2l0eT0iMC4yIj48cGF0aCBkPSJNMCAwIHYgNjAgaCAxMm0wIC02MCB2IDYwIG0xMiAtNjAgdiA2MCBtMTIgLTYwIHYgNjAgbTEyIC02MCB2IDYwIG0xMiAtNjAgdiA2MCIvPjxwYXRoIGQ9Ik0wIDAgaCA2MCB2IDEybS02MCAwIGggNjAgbTAgMTIgaC02MCBtNjAgMTIgaC02MCBtNjAgMTIgaC02MCBtNjAgMTIgaC02MCIvPjwvZz48L3N2Zz4=')] opacity-25"></div>
       </div>
 
-      {/* Боковое навигационное меню */}
+      {/* Боковое меню */}
       <SidebarNav items={navItems} role={user.role} />
 
-      {/* Правая часть: Шапка + Контент */}
+      {/* Основной контент */}
       <div className="flex flex-col flex-1 overflow-hidden relative">
         {/* Шапка */}
         <Header />
 
-        {/* Основной контент страницы с анимацией */}
-        <AnimatePresence mode="wait">
-          <motion.main
-            key={pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{
-              duration: 0.4,
-              ease: [0.22, 1, 0.36, 1], // Плавная кривая анимации
-            }}
-            className={cn(
-              'flex-1 overflow-hidden relative',
-              'p-3 md:p-5 lg:p-6', // Уменьшенные отступы для лучшего использования пространства
-            )}>
-            {/* Контейнер для скролла контента с кастомным скроллбаром */}
-            <div className="h-full w-full overflow-y-auto overflow-x-hidden custom-scrollbar rounded-xl relative">
-              {/* Полупрозрачный эффект стекла для фона контента */}
-              <div className="absolute inset-0 backdrop-blur-[2px] bg-[#282a36]/30 rounded-xl z-0"></div>
+        {/* Содержимое страницы */}
+        <main
+          ref={mainRef}
+          className="flex-1 overflow-y-auto overflow-x-hidden relative p-3 md:p-5 lg:p-6 custom-scrollbar">
+          {/* Контейнер контента */}
+          <div ref={contentRef} className="h-full w-full overflow-hidden rounded-xl relative">
+            {/* Эффект стекла */}
+            <div
+              className="absolute inset-0 backdrop-blur-md bg-[#282a36]/30 rounded-xl z-0
+                           shadow-[0_8px_30px_rgb(0,0,0,0.12)]
+                           border border-[#bd93f9]/10"></div>
 
-              {/* Содержимое страницы */}
-              <div className="relative z-10 h-full p-2 md:p-4">{children}</div>
-            </div>
-          </motion.main>
-        </AnimatePresence>
-
-        {/* Toaster для уведомлений */}
-        <Toaster richColors />
+            {/* Содержимое */}
+            <div className="relative z-10 h-full px-3 py-4 md:p-5 overflow-auto custom-scrollbar">{children}</div>
+          </div>
+        </main>
       </div>
 
-      {/* Стили для анимированного текста */}
+      {/* Toaster для уведомлений */}
+      <Toaster richColors />
+
+      {/* Глобальные стили */}
       <style jsx global>{`
-        .text-gradient-loader {
-          background: linear-gradient(90deg, #ff79c6, #bd93f9, #8be9fd);
-          background-size: 300% 100%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          animation: gradient-shift 2s ease infinite;
+        /* Кастомные стили скроллбара */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
         }
 
-        @keyframes gradient-shift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(68, 71, 90, 0.2);
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(189, 147, 249, 0.4);
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(189, 147, 249, 0.6);
+        }
+
+        /* Гладкий скролл */
+        html {
+          scroll-behavior: smooth;
         }
       `}</style>
     </div>

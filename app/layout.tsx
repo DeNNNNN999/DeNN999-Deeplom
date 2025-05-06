@@ -3,12 +3,10 @@
 import './globals.css'
 import { Inter, Raleway } from 'next/font/google'
 import { Providers } from './providers'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { Icon } from '@iconify/react'
-import { AnimatePresence, motion } from 'framer-motion'
 
-// Импорт GSAP для анимаций
+// Импорт GSAP и необходимых плагинов
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -17,414 +15,296 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-// Шрифты для всего приложения
+// Шрифты для приложения
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
-  display: 'swap'
+  display: 'swap',
 })
 
 const raleway = Raleway({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-raleway',
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700']
+  weight: ['300', '400', '500', '600', '700'],
 })
-
-// ВАЖНО: metadata не может быть экспортирована из клиентского компонента
-// Метаданные определены в отдельном файле metadata.ts
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const decorativeElementsRef = useRef<HTMLDivElement>(null)
-  const cursorRef = useRef<HTMLDivElement>(null)
-  const cursorDotRef = useRef<HTMLDivElement>(null)
-  const [cursorText, setCursorText] = useState('')
-  const [cursorVariant, setCursorVariant] = useState('default')
-  const [isMobile, setIsMobile] = useState(false)
+  const backgroundRef = useRef<HTMLDivElement>(null)
+  const pageWrapperRef = useRef<HTMLDivElement>(null)
 
-  // Проверка, является ли устройство мобильным
+  // Создание и анимация фоновых элементов
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    if (!backgroundRef.current) return
 
-  // Эффект для кастомного курсора (только для десктопа)
-  useEffect(() => {
-    if (isMobile) return // Не используем кастомный курсор на мобильных
+    // Очищаем контейнер перед добавлением новых элементов
+    const container = backgroundRef.current
+    while (container.firstChild) {
+      container.removeChild(container.firstChild)
+    }
 
-    const cursor = cursorRef.current
-    const cursorDot = cursorDotRef.current
-    if (!cursor || !cursorDot) return
+    // Конфигурация фоновых элементов
+    const config = {
+      particleCount: 10, // Уменьшаем для производительности
+      types: ['circle', 'blob', 'square'],
+      minSize: 80,
+      maxSize: 250,
+      colors: ['#4f46e5', '#8b5cf6', '#3b82f6', '#2563eb', '#6366f1'],
+    }
 
-    const onMouseMove = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-      
-      gsap.to(cursorDot, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-      })
-    }
-    
-    // Обработчики для ховера над интерактивными элементами
-    const onMouseEnterInteractive = () => {
-      setCursorVariant('interactive')
-    }
-    
-    const onMouseLeaveInteractive = () => {
-      setCursorVariant('default')
-    }
-    
-    // Ховер над кнопками
-    const onMouseEnterButton = () => {
-      setCursorVariant('button')
-      setCursorText('Click')
-    }
-    
-    const onMouseLeaveButton = () => {
-      setCursorVariant('default')
-      setCursorText('')
-    }
-    
-    document.addEventListener('mousemove', onMouseMove)
-    
-    // Добавляем обработчики для всех интерактивных элементов
-    const setupInteractiveElements = () => {
-      const interactiveElements = document.querySelectorAll('a, button, input, select, [role="button"]')
-      interactiveElements.forEach(element => {
-        if (element.tagName.toLowerCase() === 'button' || 
-            (element.tagName.toLowerCase() === 'a' && element.hasAttribute('href'))) {
-          element.addEventListener('mouseenter', onMouseEnterButton)
-          element.addEventListener('mouseleave', onMouseLeaveButton)
-        } else {
-          element.addEventListener('mouseenter', onMouseEnterInteractive)
-          element.addEventListener('mouseleave', onMouseLeaveInteractive)
-        }
-      })
-    }
-    
-    // Вызываем сразу и после изменения DOM
-    setupInteractiveElements()
-    const observer = new MutationObserver(setupInteractiveElements)
-    observer.observe(document.body, { childList: true, subtree: true })
-    
-    return () => {
-      document.removeEventListener('mousemove', onMouseMove)
-      observer.disconnect()
-      const interactiveElements = document.querySelectorAll('a, button, input, select, [role="button"]')
-      interactiveElements.forEach(element => {
-        element.removeEventListener('mouseenter', onMouseEnterButton)
-        element.removeEventListener('mouseleave', onMouseLeaveButton)
-        element.removeEventListener('mouseenter', onMouseEnterInteractive)
-        element.removeEventListener('mouseleave', onMouseLeaveInteractive)
-      })
-    }
-  }, [isMobile, pathname])
+    // Создаем частицы фона
+    const particles = []
+    for (let i = 0; i < config.particleCount; i++) {
+      const element = document.createElement('div')
 
-  // Декоративные элементы фона
-  useEffect(() => {
-    if (!decorativeElementsRef.current) return
+      // Выбираем случайный тип и размер частицы
+      const type = config.types[Math.floor(Math.random() * config.types.length)]
+      const size = config.minSize + Math.random() * (config.maxSize - config.minSize)
+      const color = config.colors[Math.floor(Math.random() * config.colors.length)]
 
-    // Создаем декоративные элементы для фона
-    const createDecorative = () => {
-      const container = decorativeElementsRef.current
-      if (!container) return
+      // Применяем общие стили
+      element.classList.add('bg-particle')
+      element.style.position = 'absolute'
+      element.style.width = `${size}px`
+      element.style.height = `${size}px`
+      element.style.willChange = 'transform, opacity'
+      element.style.zIndex = '-1'
+      element.style.opacity = '0'
 
-      // Очищаем контейнер перед добавлением новых элементов
-      while (container.firstChild) {
-        container.removeChild(container.firstChild)
+      // Случайное положение
+      element.style.left = `${Math.random() * 100}%`
+      element.style.top = `${Math.random() * 100}%`
+
+      // Применяем стили в зависимости от типа
+      switch (type) {
+        case 'circle':
+          element.style.borderRadius = '50%'
+          element.style.background = `radial-gradient(circle, ${color}10, ${color}02)`
+          element.style.filter = `blur(${20 + Math.random() * 15}px)`
+          break
+        case 'blob':
+          const radius = [
+            30 + Math.random() * 40,
+            50 + Math.random() * 40,
+            30 + Math.random() * 20,
+            60 + Math.random() * 20,
+          ]
+          element.style.borderRadius = `${radius[0]}% ${radius[1]}% ${radius[2]}% ${radius[3]}%`
+          element.style.background = `linear-gradient(45deg, ${color}15, ${color}05)`
+          element.style.filter = `blur(${25 + Math.random() * 15}px)`
+          break
+        case 'square':
+          element.style.borderRadius = `${15 + Math.random() * 20}px`
+          element.style.background = `linear-gradient(135deg, ${color}10, ${color}03)`
+          element.style.filter = `blur(${20 + Math.random() * 15}px)`
+          break
       }
 
-      // Создаем разные фигуры
-      const shapes = [
-        { type: 'circle', count: 5 },
-        { type: 'square', count: 3 },
-        { type: 'triangle', count: 4 },
-        { type: 'hexagon', count: 2 }
-      ]
-
-      shapes.forEach(shape => {
-        for (let i = 0; i < shape.count; i++) {
-          const element = document.createElement('div')
-          element.classList.add('decorative-shape', `shape-${shape.type}`)
-          
-          // Случайное положение
-          element.style.left = `${Math.random() * 100}%`
-          element.style.top = `${Math.random() * 100}%`
-          
-          // Случайный размер
-          const size = 50 + Math.random() * 100
-          element.style.width = `${size}px`
-          element.style.height = `${size}px`
-          
-          // Добавляем градиентный цвет
-          const hue1 = Math.floor(Math.random() * 60) + 210 // Оттенки синего/фиолетового
-          const hue2 = Math.floor(Math.random() * 60) + 180 // Оттенки сине-зеленого
-          
-          if (shape.type === 'circle') {
-            element.style.borderRadius = '50%'
-            element.style.background = `radial-gradient(circle, hsla(${hue1}, 80%, 60%, 0.15), hsla(${hue2}, 70%, 40%, 0.05))`
-          } else if (shape.type === 'square') {
-            element.style.borderRadius = '10%'
-            element.style.background = `linear-gradient(45deg, hsla(${hue1}, 70%, 50%, 0.15), hsla(${hue2}, 60%, 40%, 0.05))`
-          } else if (shape.type === 'triangle') {
-            element.style.width = '0'
-            element.style.height = '0'
-            element.style.borderLeft = `${size/2}px solid transparent`
-            element.style.borderRight = `${size/2}px solid transparent`
-            element.style.borderBottom = `${size}px solid hsla(${hue1}, 70%, 50%, 0.1)`
-            element.style.background = 'transparent'
-          } else if (shape.type === 'hexagon') {
-            element.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-            element.style.background = `conic-gradient(from 45deg, hsla(${hue1}, 80%, 60%, 0.15), hsla(${hue2}, 70%, 40%, 0.05))`
-          }
-          
-          // Добавляем блюр
-          element.style.filter = `blur(${10 + Math.random() * 10}px)`
-          
-          // Добавляем элемент в контейнер
-          container.appendChild(element)
-        }
-      })
+      // Добавляем в контейнер и массив для анимации
+      container.appendChild(element)
+      particles.push(element)
     }
 
-    createDecorative()
+    // Анимируем появление элементов
+    gsap.to(particles, {
+      opacity: 0.6,
+      stagger: {
+        amount: 1,
+        from: 'random',
+      },
+      duration: 1.5,
+      ease: 'power2.out',
+    })
 
-    // Анимируем декоративные элементы
-    const animateDecorative = () => {
-      const shapes = document.querySelectorAll('.decorative-shape')
-      
-      // Начальная анимация появления
-      gsap.fromTo(
-        shapes, 
-        { 
-          opacity: 0, 
-          scale: 0.5, 
-          y: 40 
-        }, 
-        { 
-          opacity: 0.8, 
-          scale: 1, 
-          y: 0, 
-          stagger: 0.1,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.5)' 
-        }
-      )
-      
-      // Анимируем каждую фигуру отдельно для создания плавающего эффекта
-      shapes.forEach((shape, index) => {
-        // Создаем случайные параметры движения
-        const randomX = Math.random() * 80 - 40 // От -40 до 40
-        const randomY = Math.random() * 80 - 40 // От -40 до 40
-        const randomRotation = Math.random() * 360 // От 0 до 360
-        const randomDuration = 15 + Math.random() * 20 // От 15 до 35 секунд
-        
-        gsap.to(shape, {
-          x: randomX,
-          y: randomY,
-          rotation: randomRotation,
-          duration: randomDuration,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: index * 0.2
+    // Анимируем движение элементов
+    particles.forEach(particle => {
+      // Создаем случайные параметры движения
+      const xMove = Math.random() * 80 - 40
+      const yMove = Math.random() * 80 - 40
+      const duration = 20 + Math.random() * 40
+
+      // Плавное движение
+      gsap.to(particle, {
+        x: xMove,
+        y: yMove,
+        duration,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      })
+    })
+
+    // Плавные переходы между страницами
+    if (pageWrapperRef.current) {
+      // Анимация выхода при изменении маршрута
+      const exitAnimation = () => {
+        gsap.to(pageWrapperRef.current, {
+          opacity: 0,
+          y: -20,
+          duration: 0.4,
+          ease: 'power2.inOut',
         })
-      })
+      }
+
+      // Анимация входа при загрузке
+      const enterAnimation = () => {
+        gsap.fromTo(
+          pageWrapperRef.current,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            delay: 0.1,
+          },
+        )
+      }
+
+      // Запускаем входную анимацию
+      enterAnimation()
     }
 
-    // Запускаем анимацию с небольшой задержкой
-    setTimeout(animateDecorative, 500)
-
-    // Очистка
     return () => {
-      const shapes = document.querySelectorAll('.decorative-shape')
-      shapes.forEach(shape => {
-        gsap.killTweensOf(shape)
-      })
+      // Очистка анимаций при размонтировании
+      gsap.killTweensOf(particles)
     }
   }, [pathname])
 
-  // Варианты анимации для курсора
-  const cursorVariants = {
-    default: {
-      width: 40,
-      height: 40,
-      backgroundColor: 'rgba(79, 70, 229, 0.1)',
-      border: '1px solid rgba(79, 70, 229, 0.2)',
-      x: -20,
-      y: -20,
-    },
-    interactive: {
-      width: 60,
-      height: 60,
-      backgroundColor: 'rgba(79, 70, 229, 0.15)',
-      border: '1.5px solid rgba(79, 70, 229, 0.6)',
-      x: -30,
-      y: -30,
-    },
-    button: {
-      width: 80,
-      height: 80,
-      backgroundColor: 'rgba(79, 70, 229, 0.2)',
-      border: '2px solid rgba(79, 70, 229, 0.8)',
-      x: -40,
-      y: -40,
-    }
-  }
+  // Анимация текстовых элементов при скролле
+  useEffect(() => {
+    if (typeof window === 'undefined') return
 
-  // Стили для декоративных элементов и курсора
-  const decorativeStyles = `
-    .decorative-shape {
+    // Находим все элементы с специальными классами для анимации
+    const fadeElements = document.querySelectorAll('.fade-in-element')
+    const scaleElements = document.querySelectorAll('.scale-in-element')
+    const slideElements = document.querySelectorAll('.slide-in-element')
+
+    // Анимация для плавного появления
+    fadeElements.forEach(element => {
+      gsap.fromTo(
+        element,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        },
+      )
+    })
+
+    // Анимация для увеличения
+    scaleElements.forEach(element => {
+      gsap.fromTo(
+        element,
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.7,
+          ease: 'back.out(1.5)',
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+        },
+      )
+    })
+
+    // Анимация для появления сбоку
+    slideElements.forEach(element => {
+      const direction = element.classList.contains('slide-from-right') ? 50 : -50
+
+      gsap.fromTo(
+        element,
+        { opacity: 0, x: direction },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        },
+      )
+    })
+
+    return () => {
+      // Очищаем все ScrollTrigger
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    }
+  }, [pathname])
+
+  // Стили для фоновых элементов и анимированных компонентов
+  const styles = `
+    .bg-particle {
       position: absolute;
-      border-radius: 50%;
       pointer-events: none;
-      z-index: -1;
-      opacity: 0.2;
-      will-change: transform;
-    }
-    
-    .auth-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-    
-    .page-transition-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
+      opacity: 0;
+      will-change: transform, opacity;
     }
 
-    .cursor-dot {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 8px;
-      height: 8px;
-      background-color: rgba(79, 70, 229, 0.9);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
-
-    .cursor {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: difference;
-      backdrop-filter: blur(1px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-weight: 500;
-      font-size: 12px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 768px) {
-      .cursor, .cursor-dot {
-        display: none;
-      }
-    }
-
-    .gradient-text {
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      background-image: linear-gradient(90deg, #4f46e5, #8b5cf6, #3b82f6);
-    }
-
-    .glass-card {
+    /* Глассморфизм */
+    .glass {
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     }
 
-    .brutalist-element {
-      border: 2px solid #000;
-      box-shadow: 6px 6px 0 #000;
-      transition: box-shadow 0.3s, transform 0.3s;
+    /* Градиентные текстовые эффекты */
+    .gradient-text {
+      background: linear-gradient(to right, #4f46e5, #8b5cf6, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    .brutalist-element:hover {
-      box-shadow: 10px 10px 0 #000;
+    /* Брутализм */
+    .brutalist {
+      background: #ffffff;
+      border: 3px solid #000000;
+      box-shadow: 8px 8px 0 #000000;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .brutalist:hover {
       transform: translate(-4px, -4px);
+      box-shadow: 12px 12px 0 #000000;
     }
 
-    .radial-gradient-bg {
-      background: radial-gradient(circle at center, rgba(79, 70, 229, 0.15) 0%, rgba(17, 24, 39, 0) 70%);
-    }
-
-    .glass-blur {
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+    /* Классы для анимаций при скролле */
+    .fade-in-element, .scale-in-element, .slide-in-element {
+      visibility: visible;
     }
   `
 
   return (
     <html lang="en" className={`${inter.variable} ${raleway.variable} dark`} suppressHydrationWarning>
       <head>
-        <style dangerouslySetInnerHTML={{ __html: decorativeStyles }} />
+        <style dangerouslySetInnerHTML={{ __html: styles }} />
       </head>
-      <body className="font-sans antialiased overflow-x-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
-        {/* Декоративные элементы фона */}
-        <div ref={decorativeElementsRef} className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]"></div>
-        
-        {/* Кастомный курсор (только на десктопах) */}
-        {!isMobile && (
-          <>
-            <motion.div 
-              ref={cursorRef}
-              className="cursor hidden md:flex"
-              variants={cursorVariants}
-              animate={cursorVariant}
-              transition={{ type: "tween", ease: "backOut", duration: 0.3 }}
-            >
-              {cursorText && <span>{cursorText}</span>}
-            </motion.div>
-            <div ref={cursorDotRef} className="cursor-dot hidden md:block"></div>
-          </>
-        )}
+      <body className="font-sans antialiased bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+        {/* Фоновые элементы */}
+        <div ref={backgroundRef} className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]"></div>
 
-        {/* Провайдеры приложения */}
-        <Providers>
-          {/* Анимация перехода страниц */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              className="page-transition-wrapper"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
-        </Providers>
+        {/* Контейнер содержимого с анимацией страницы */}
+        <div ref={pageWrapperRef} className="min-h-screen w-full">
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   )

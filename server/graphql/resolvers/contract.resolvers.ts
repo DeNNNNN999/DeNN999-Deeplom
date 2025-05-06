@@ -6,6 +6,7 @@ import { checkPermission, checkOwnership } from '../../utils/permissions';
 import { Context } from '../context';
 import { createNotification } from '../../services/notification.service';
 import { invalidateCacheByPattern } from '../../redis';
+import { parseDate, formatDate } from '../../utils/date-helpers';
 
 export const contractResolvers = {
   Query: {
@@ -63,10 +64,10 @@ export const contractResolvers = {
           search?: string; 
           status?: string; 
           supplierId?: string;
-          startDateFrom?: Date;
-          startDateTo?: Date;
-          endDateFrom?: Date;
-          endDateTo?: Date;
+          startDateFrom?: string;
+          startDateTo?: string;
+          endDateFrom?: string;
+          endDateTo?: string;
           minValue?: number;
           maxValue?: number;
         }; 
@@ -227,22 +228,51 @@ export const contractResolvers = {
         });
       }
       
-      // Validate that end date is after start date
-      const startDate = new Date(input.startDate);
-      const endDate = new Date(input.endDate);
-      
-      if (endDate <= startDate) {
-        throw new GraphQLError('End date must be after start date', {
+      // Проверяем, что даты в правильном формате
+      if (!input.startDate || !input.endDate) {
+        throw new GraphQLError('Даты начала и окончания обязательны', {
           extensions: { code: 'BAD_USER_INPUT' },
         });
       }
       
-      // Create contract
-      const result = await db.insert(contracts).values({
+      // Проверяем, что дата окончания позже даты начала
+      try {
+        // Преобразуем строки в объекты даты только для сравнения
+        const startDate = new Date(input.startDate);
+        const endDate = new Date(input.endDate);
+        
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+          throw new GraphQLError('Неверный формат даты. Используйте формат YYYY-MM-DD', {
+            extensions: { code: 'BAD_USER_INPUT' },
+          });
+        }
+        
+        if (endDate <= startDate) {
+          throw new GraphQLError('Дата окончания должна быть позже даты начала', {
+            extensions: { code: 'BAD_USER_INPUT' },
+          });
+        }
+        
+        console.log('Date comparison successful');
+      } catch (error) {
+        console.error('Error comparing dates:', error);
+        throw new GraphQLError('Ошибка при сравнении дат. Используйте формат YYYY-MM-DD', {
+          extensions: { code: 'BAD_USER_INPUT' },
+        });
+      }
+      
+      // Данные контракта для вставки в БД
+      // ВАЖНО: Даты сохраняем как строки, а не как объекты Date
+      const contractData = {
         ...input,
         createdById: user.id,
         updatedById: user.id,
-      }).returning();
+      };
+      
+      console.log('Contract data to be inserted:', JSON.stringify(contractData));
+      
+      // Create contract
+      const result = await db.insert(contracts).values(contractData).returning();
       
       const newContract = result[0];
       
@@ -316,42 +346,84 @@ export const contractResolvers = {
       }
       
       // Validate dates if being updated
+      // Преобразуем даты в объекты Date для сравнения
+      const updateData: any = { ...input };
+      
       if (input.startDate && input.endDate) {
-        const startDate = new Date(input.startDate);
-        const endDate = new Date(input.endDate);
-        
-        if (endDate <= startDate) {
-          throw new GraphQLError('End date must be after start date', {
+        try {
+          const startDate = new Date(input.startDate);
+          const endDate = new Date(input.endDate);
+          
+          if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            throw new GraphQLError('Неверный формат даты. Используйте формат YYYY-MM-DD', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+          
+          if (endDate <= startDate) {
+            throw new GraphQLError('Дата окончания должна быть позже даты начала', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+        } catch (error) {
+          console.error('Error comparing dates:', error);
+          throw new GraphQLError('Ошибка при сравнении дат. Используйте формат YYYY-MM-DD', {
             extensions: { code: 'BAD_USER_INPUT' },
           });
         }
       } else if (input.startDate && !input.endDate) {
-        const startDate = new Date(input.startDate);
-        const endDate = new Date(currentContract.endDate);
-        
-        if (endDate <= startDate) {
-          throw new GraphQLError('End date must be after start date', {
+        try {
+          const startDate = new Date(input.startDate);
+          const endDate = new Date(currentContract.endDate);
+          
+          if (isNaN(startDate.getTime())) {
+            throw new GraphQLError('Неверный формат даты начала. Используйте формат YYYY-MM-DD', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+          
+          if (endDate <= startDate) {
+            throw new GraphQLError('Дата окончания должна быть позже даты начала', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+        } catch (error) {
+          console.error('Error comparing dates:', error);
+          throw new GraphQLError('Ошибка при сравнении дат. Используйте формат YYYY-MM-DD', {
             extensions: { code: 'BAD_USER_INPUT' },
           });
         }
       } else if (!input.startDate && input.endDate) {
-        const startDate = new Date(currentContract.startDate);
-        const endDate = new Date(input.endDate);
-        
-        if (endDate <= startDate) {
-          throw new GraphQLError('End date must be after start date', {
+        try {
+          const startDate = new Date(currentContract.startDate);
+          const endDate = new Date(input.endDate);
+          
+          if (isNaN(endDate.getTime())) {
+            throw new GraphQLError('Неверный формат даты окончания. Используйте формат YYYY-MM-DD', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+          
+          if (endDate <= startDate) {
+            throw new GraphQLError('Дата окончания должна быть позже даты начала', {
+              extensions: { code: 'BAD_USER_INPUT' },
+            });
+          }
+        } catch (error) {
+          console.error('Error comparing dates:', error);
+          throw new GraphQLError('Ошибка при сравнении дат. Используйте формат YYYY-MM-DD', {
             extensions: { code: 'BAD_USER_INPUT' },
           });
         }
       }
       
+      // Добавляем информацию о обновлении
+      updateData.updatedById = user.id;
+      updateData.updatedAt = new Date().toISOString();
+      
       // Update contract
       const result = await db.update(contracts)
-        .set({
-          ...input,
-          updatedById: user.id,
-          updatedAt: new Date(),
-        })
+        .set(updateData)
         .where(eq(contracts.id, id))
         .returning();
       
@@ -482,13 +554,14 @@ export const contractResolvers = {
       const currentContract = currentContractResult[0];
       
       // Update contract status
+      const now = new Date().toISOString();
       const result = await db.update(contracts)
         .set({
           status: 'ACTIVE',
           approvedById: user.id,
-          approvedAt: new Date(),
+          approvedAt: now,
           updatedById: user.id,
-          updatedAt: new Date(),
+          updatedAt: now,
         })
         .where(eq(contracts.id, id))
         .returning();
@@ -578,14 +651,15 @@ export const contractResolvers = {
       const supplier = supplierResult[0];
       
       // Update contract status and add rejection reason to terms
-      const terms = `${currentContract.terms || ''}\n\nRejection reason (${new Date().toISOString()}): ${reason}`.trim();
+      const now = new Date().toISOString();
+      const terms = `${currentContract.terms || ''}\n\nRejection reason (${now}): ${reason}`.trim();
       
       const result = await db.update(contracts)
         .set({
           status: 'REJECTED',
           terms,
           updatedById: user.id,
-          updatedAt: new Date(),
+          updatedAt: now,
         })
         .where(eq(contracts.id, id))
         .returning();

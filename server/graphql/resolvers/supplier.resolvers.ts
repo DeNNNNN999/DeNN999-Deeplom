@@ -5,6 +5,8 @@ import {
   supplierCategories, 
   supplierCategoryMap,
   notificationTypeEnum,
+  notifications,
+  users,
 } from '../../db/schema';
 import { createAuditLog } from '../../services/auditLog.service';
 import { checkPermission, checkOwnership } from '../../utils/permissions';

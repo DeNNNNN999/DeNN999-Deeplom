@@ -1,11 +1,137 @@
-/* Добавляем стили для анимации при наведении на кнопки */
-.button-hover-effect {
-  transform: scale(1.03) !important;
-  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+/* Основные стили для интерактивных кнопок */
+.button-primary {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(to right, #4f46e5, #6366f1);
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.3);
 }
 
-/* Общие стили для страниц аутентификации */
-.login-button {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.button-primary:hover {
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5);
+  transform: translateY(-2px);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px -2px rgba(79, 70, 229, 0.3);
+}
+
+/* Эффект сияния */
+.button-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4));
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+}
+
+.button-primary:hover .button-glow {
+  opacity: 0.8;
+}
+
+/* Эффект блика */
+@keyframes shine {
+  0% {
+    left: -100%;
+    transition-property: left;
+  }
+  100% {
+    left: 100%;
+    transition-property: left;
+  }
+}
+
+.animate-shine {
+  animation: shine 3s infinite;
+}
+
+.button-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 50%;
+  transform: skewX(-15deg);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
+  animation: shine 3s infinite;
+}
+
+/* Эффект пульсации для состояния загрузки */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.button-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Эффект волны от клика */
+.button-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.button-ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 100%;
+  transform: scale(0);
+  opacity: 1;
+  pointer-events: none;
+  animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(50);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(100);
+    opacity: 0;
+  }
+}
+
+/* Специальные кнопки */
+.neon-button {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #4f46e5;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.4),
+              inset 0 0 5px rgba(79, 70, 229, 0.4);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  box-shadow: 0 0 15px rgba(79, 70, 229, 0.8),
+              inset 0 0 10px rgba(79, 70, 229, 0.5);
+}
+
+.neon-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.3), transparent);
+  transition: 0.5s;
+}
+
+.neon-button:hover::before {
+  left: 100%;
 }

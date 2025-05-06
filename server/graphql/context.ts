@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { PubSub } from 'graphql-subscriptions';
 import { db } from '../db';
@@ -9,7 +9,7 @@ const redisClient = createRedisClient();
 
 // Context type definition
 export interface Context {
-  req: Request;
+  req: any; // Can be Express Request or NextRequest
   user: {
     id: string;
     email: string;
@@ -22,9 +22,32 @@ export interface Context {
 }
 
 // Create GraphQL context
-export async function createContext({ req }: { req: Request }): Promise<Context> {
-  // Extract token from authorization header
-  const token = req.headers.authorization?.replace('Bearer ', '') || '';
+export async function createContext(contextInput: any): Promise<Context> {
+  try {
+    // Безопасно получаем headers из разных форматов запросов
+    const req = contextInput.req || contextInput.request || {};
+    let headers;
+    
+    if (req.headers) {
+      headers = req.headers;
+    } else if (contextInput.headers) {
+      headers = contextInput.headers;
+    } else {
+      headers = {};
+    }
+    
+    // Безопасное получение токена авторизации
+    let token = '';
+    
+    if (typeof headers.get === 'function') {
+      // NextRequest headers
+      token = headers.get('authorization') || '';
+    } else if (headers.authorization) {
+      // Express req headers
+      token = headers.authorization;
+    }
+    
+    token = token.replace('Bearer ', '').trim();
   
   // Verify and decode JWT
   let user = null;
@@ -56,4 +79,19 @@ export async function createContext({ req }: { req: Request }): Promise<Context>
     redis: redisClient,
     cacheKey
   };
+  } catch (error) {
+    console.error('Error in context creation:', error);
+    
+    // Возвращаем базовый контекст, чтобы избежать падения сервера
+    const pubsub = new PubSub();
+    
+    return {
+      req: {},
+      user: null,
+      db,
+      pubsub,
+      redis: redisClient,
+      cacheKey: (prefix: string, id?: string) => id ? `${prefix}:${id}` : prefix
+    };
+  }
 }

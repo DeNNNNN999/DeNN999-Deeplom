@@ -145,12 +145,40 @@ export default function CreateContractPage() {
   const onSubmit = async (data: z.infer<typeof contractFormSchema>) => {
     setLoading(true);
     try {
+      console.log('Данные формы перед отправкой:', data); // Отладочный вывод
+      
+      // Форматирование дат в строки YYYY-MM-DD
+      // Проверяем, что даты являются объектами Date перед форматированием
+      const startDate = data.startDate instanceof Date ? data.startDate : new Date(data.startDate);
+      const endDate = data.endDate instanceof Date ? data.endDate : new Date(data.endDate);
+      
+      // Убеждаемся, что даты валидны
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        throw new Error('Неверный формат даты. Используйте формат YYYY-MM-DD');
+      }
+      
+      // Строго в формате YYYY-MM-DD без времени и часового пояса
+      const startDateStr = format(startDate, 'yyyy-MM-dd');
+      const endDateStr = format(endDate, 'yyyy-MM-dd');
+      
+      console.log('Форматированные даты:', { startDate: startDateStr, endDate: endDateStr }); // Отладочный вывод
+      
       // Подготовка данных для отправки на сервер
-      const contractInput: ContractInput = {
-        ...data,
-        startDate: data.startDate.toISOString(),
-        endDate: data.endDate.toISOString(),
+      const contractInput = {
+        title: data.title,
+        supplierId: data.supplierId,
+        contractNumber: data.contractNumber,
+        description: data.description || "",
+        startDate: startDateStr,
+        endDate: endDateStr,
+        value: data.value,
+        currency: data.currency,
+        terms: data.terms || "",
+        paymentTerms: data.paymentTerms || "",
+        deliveryTerms: data.deliveryTerms || "",
       };
+      
+      console.log('Отправляемый объект:', contractInput); // Отладочный вывод
 
       // Выполнение мутации для создания контракта
       const { createContract } = await graphqlClient.request<{ createContract: any }>(
@@ -160,9 +188,13 @@ export default function CreateContractPage() {
 
       toast.success('Контракт успешно создан');
       router.push(`/specialist/contracts/${createContract.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating contract:', error);
-      toast.error('Ошибка при создании контракта');
+      // Более подробное отображение ошибки
+      toast.error(error.message || 'Ошибка при создании контракта', {
+        description: error.response?.errors?.[0]?.message,
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }

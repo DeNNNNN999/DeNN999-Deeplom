@@ -14,7 +14,7 @@ type Option = {
 
 interface MultiSelectProps {
   options: Option[];
-  selected: string[];
+  selected: string[] | undefined;
   onChange: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
@@ -34,7 +34,7 @@ export function MultiSelect({
 
   // Create a map of selected values for O(1) lookup
   const selectedMap = React.useMemo(() => {
-    return selected.reduce((acc, value) => {
+    return (selected || []).reduce((acc, value) => {
       acc[value] = true;
       return acc;
     }, {} as Record<string, boolean>);
@@ -51,10 +51,10 @@ export function MultiSelect({
       
       if (selectedMap[value]) {
         // If already selected, remove it
-        onChange(selected.filter(item => item !== value));
+        onChange((selected || []).filter(item => item !== value));
       } else {
         // Otherwise add it
-        onChange([...selected, value]);
+        onChange([...(selected || []), value]);
       }
     },
     [onChange, selected, selectedMap]
@@ -62,7 +62,7 @@ export function MultiSelect({
 
   const handleRemove = React.useCallback(
     (value: string) => {
-      onChange(selected.filter(item => item !== value));
+      onChange((selected || []).filter(item => item !== value));
     },
     [onChange, selected]
   );
@@ -111,7 +111,7 @@ export function MultiSelect({
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
             onKeyDown={(e) => {
-              if (e.key === 'Backspace' && !inputValue && selected.length > 0) {
+              if (e.key === 'Backspace' && !inputValue && selected && selected.length > 0) {
                 // Remove the last selected item when pressing backspace in an empty input
                 handleRemove(selected[selected.length - 1]);
               }
